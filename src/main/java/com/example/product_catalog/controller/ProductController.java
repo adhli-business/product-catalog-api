@@ -1,6 +1,8 @@
 // ProductController.java
 package com.example.product_catalog.controller;
 
+import com.example.product_catalog.dto.ProductRequest;
+import com.example.product_catalog.mapper.ProductMapper;
 import com.example.product_catalog.model.Product;
 import com.example.product_catalog.service.ProductService;
 import jakarta.validation.Valid;
@@ -12,14 +14,18 @@ import java.util.List;
 @RequestMapping
 public class ProductController {
     private final ProductService service;
+    private final ProductMapper mapper;
 
-    public ProductController(ProductService service) {
+
+    public ProductController(ProductService service, ProductMapper mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
 
     @PostMapping("/products")
-    public Product create(@Valid @RequestBody Product product, @RequestParam Long categoryId) {
-        return service.save(product, categoryId);
+    public Product create(@Valid @RequestBody ProductRequest dto) {
+        Product product = mapper.toEntity(dto);
+        return service.save(product, dto.getCategoryId());
     }
 
     @GetMapping("/categories/{id}/products")

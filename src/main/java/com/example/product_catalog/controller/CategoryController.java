@@ -1,7 +1,11 @@
 package com.example.product_catalog.controller;
 
+import com.example.product_catalog.dto.CategoryRequest;
 import com.example.product_catalog.model.Category;
 import com.example.product_catalog.service.CategoryService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +18,9 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category create(@RequestBody Category category) {
-        return service.save(category);
-    }
+    public Category create(@Valid @RequestBody CategoryRequest dto) {
+    Category category = new Category();
+    category.setName(dto.getName());
+    return service.save(category);
+}
 }
